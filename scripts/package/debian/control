@@ -1,0 +1,34 @@
+Source: 
+Section: kernel
+Priority: optional
+Maintainer: yanzi <yanzi@yanzi-ws>
+Build-Depends: bc, kmod, cpio
+Homepage: http://www.kernel.org/
+
+Package: linux-image-
+Architecture: amd64
+Description: Linux kernel, version 
+ This package contains the Linux kernel, modules and corresponding other
+ files, version: .
+
+Package: linux-headers-
+Architecture: amd64
+Description: Linux kernel headers for  on amd64
+ This package provides kernel header files for  on amd64
+ .
+ This is useful for people who need to build external modules
+
+Package: linux-libc-dev
+Section: devel
+Provides: linux-kernel-headers
+Architecture: amd64
+Description: Linux support headers for userspace development
+ This package provides userspaces headers from the Linux kernel.  These headers
+ are used by the installed headers for GNU glibc and other system libraries.
+
+Package: linux-image--dbg
+Section: debug
+Architecture: amd64
+Description: Linux kernel debugging symbols for 
+ This package will come in handy if you need to debug the kernel. It provides
+ all the necessary debug symbols for the kernel and its modules.
