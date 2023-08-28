@@ -1801,8 +1801,9 @@ static int rockchip_get_mux(struct rockchip_pin_bank *bank, int pin)
  * parts.
  * @bank: pin bank to change
  * @pin: pin to change
- * @mux: new mux function to set
+ * @mux: new mux function
  */
+
 static int rockchip_set_mux(struct rockchip_pin_bank *bank, int pin, int mux)
 {
 	struct rockchip_pinctrl *info = bank->drvdata;
@@ -1811,7 +1812,14 @@ static int rockchip_set_mux(struct rockchip_pin_bank *bank, int pin, int mux)
 	int reg, ret, mask, mux_type;
 	u8 bit;
 	u32 data, rmask;
-	u32 route_reg = 0, route_val = 0;
+	/*unsigned int orig;
+	int value;
+	void* base;*/
+
+	if (bank->bank_num == 0x1 && (pin == 0x2 || pin == 0x3)) {
+		ret = 0;
+		goto TAG_RETURN;
+	}
 
 	ret = rockchip_verify_mux(bank, pin, mux);
 	if (ret < 0)
@@ -1855,6 +1863,8 @@ static int rockchip_set_mux(struct rockchip_pin_bank *bank, int pin, int mux)
 		return -EINVAL;
 
 	if (bank->route_mask & BIT(pin)) {
+		u32 route_reg = 0, route_val = 0;
+
 		ret = rockchip_get_mux_route(bank, pin, mux,
 					     &route_reg, &route_val);
 		switch (ret) {
@@ -1885,10 +1895,10 @@ static int rockchip_set_mux(struct rockchip_pin_bank *bank, int pin, int mux)
 		data = (mask << (bit + 16));
 		rmask = data | (data >> 16);
 		data |= (mux & mask) << bit;
-		if(bank->bank_num != 1 && pin != 10)
-			ret = regmap_update_bits(regmap, reg, rmask, data);
+		ret = regmap_update_bits(regmap, reg, rmask, data);
 	}
 
+TAG_RETURN:
 	return ret;
 }
 
